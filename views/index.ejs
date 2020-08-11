@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+
+    <div class="row">
+        <a id="forward" class="waves-effect waves-light btn col s12">Go forward</a><br><br>
+        <a id="backward" class="waves-effect waves-light btn col s12">Go Back</a><br><br>
+        <a id="reload" class="waves-effect waves-light btn col s12">Reload page</a><br><br>
+        <div class="input-field col s12">
+            <input placeholder="URL" id="url" type="text" class="validate">
+            <label for="url">URL</label>
+        </div>
+        <a id="changepage" class="waves-effect waves-light btn col s12">Change page</a><br><br><br>
+        <a id="muteToggle" class="waves-effect waves-light btn col s12">Mute/Unmute page</a>
+    </div>
+
+    <script>
+
+        document.getElementById("forward").addEventListener("click", () => {
+            fetch('/forward')
+                .then(data => {
+                    M.toast({ html: 'Page forwarded', classes: 'rounded' });
+                });
+        })
+        document.getElementById("backward").addEventListener("click", () => {
+            fetch('/backward')
+                .then(data => {
+                    M.toast({ html: 'Returned to previous page', classes: 'rounded' });
+                });
+        })
+        document.getElementById("reload").addEventListener("click", () => {
+            fetch('/reload')
+                .then(data => {
+                    M.toast({ html: 'Page reloaded', classes: 'rounded' });
+                });
+        })
+        document.getElementById("muteToggle").addEventListener("click", () => {
+            fetch('/muteToggle')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.muted)
+                    if (!data.muted) {
+                        M.toast({ html: 'Muted', classes: 'rounded' });
+                    } else {
+                        M.toast({ html: 'UnMuted', classes: 'rounded' });
+                    }
+
+                });
+        })
+        document.getElementById("changepage").addEventListener("click", () => {
+            fetch('/loadurl', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url: document.getElementById("url").value }),
+            })
+                .then(data => {
+                    M.toast({ html: 'Page changed', classes: 'rounded' });
+                });
+        })
+
+    </script>
+</body>
+
+</html>
